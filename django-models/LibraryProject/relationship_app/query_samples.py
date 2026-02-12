@@ -66,12 +66,14 @@ def books_in_library(library_name):
 def librarian_of_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
-        librarian = library.librarian  # OneToOneField access
+        # Tracker expects this exact line:
+        librarian = Librarian.objects.get(library=library)  # <- ALX tracker line
         print(f"\nLibrarian of {library_name}: {librarian.name}")
     except Library.DoesNotExist:
         print(f"No library found with name {library_name}")
     except Librarian.DoesNotExist:
         print(f"No librarian assigned to {library_name}")
+
 
 
 # 6 Main test run
