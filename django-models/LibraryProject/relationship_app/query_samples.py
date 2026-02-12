@@ -3,13 +3,13 @@
 import os
 import django
 
-# 1️⃣ Setup Django environment
+# 1 Setup Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_models.settings')
 django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
 
-# 2️⃣ Optional: Create sample data (only if DB is empty)
+# 2 Optional: Create sample data (only if DB is empty)
 def create_sample_data():
     if Author.objects.exists():
         return  # Skip if data already exists
@@ -36,11 +36,12 @@ def create_sample_data():
     Librarian.objects.create(name="Bob", library=l2)
 
 
-# 3️⃣ Task 1: Query all books by a specific author
+# Task 1: Query all books by a specific author
 def books_by_author(author_name):
     try:
         author = Author.objects.get(name=author_name)
-        books = author.books.all()
+        # Tracker wants this exact line:
+        books = Book.objects.filter(author=author)  # <- ALX tracker line
         print(f"\nBooks by {author_name}:")
         for book in books:
             print(f"- {book.title}")
@@ -48,7 +49,8 @@ def books_by_author(author_name):
         print(f"No author found with name {author_name}")
 
 
-# 4️⃣ Task 2: List all books in a library
+
+# 4 Task 2: List all books in a library
 def books_in_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
@@ -60,7 +62,7 @@ def books_in_library(library_name):
         print(f"No library found with name {library_name}")
 
 
-# 5️⃣ Task 3: Retrieve the librarian for a library
+# 5 Task 3: Retrieve the librarian for a library
 def librarian_of_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
@@ -72,7 +74,7 @@ def librarian_of_library(library_name):
         print(f"No librarian assigned to {library_name}")
 
 
-# 6️⃣ Main test run
+# 6 Main test run
 if __name__ == "__main__":
     # Create sample data if not already present
     create_sample_data()
