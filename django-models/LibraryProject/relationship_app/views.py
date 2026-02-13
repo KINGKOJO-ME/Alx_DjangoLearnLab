@@ -67,3 +67,12 @@ def user_login(request):
     else:
         form = AuthenticationForm()
     return render(request, 'relationship_app/login.html', {'form': form})
+
+# Add logout view to end user session
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def user_logout(request):
+    logout(request)  # Ends the user session
+    return render(request, 'relationship_app/logout.html')
