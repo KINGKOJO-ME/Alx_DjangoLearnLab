@@ -10,8 +10,12 @@ urlpatterns = [
 
 # Add login view for user authentication]
 
+from django.urls import path
+from .views import CustomLoginView, CustomLogoutView, register
+
 urlpatterns = [
-    path('register/', views.register, name='register'),
-    path('login/', views.user_login, name='login'),
-    path('logout/', views.user_logout, name='logout'),
+    path("login/", CustomLoginView.as_view(), name="login"),
+    path("logout/", CustomLogoutView.as_view(), name="logout"),
+    path("register/", register, name="register"),
 ]
+

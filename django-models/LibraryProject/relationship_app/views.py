@@ -30,49 +30,28 @@ class LibraryDetailView(DetailView):
     # register view for user registration
 
 from django.shortcuts import render, redirect
+from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
+from django.contrib.auth.views import LoginView, LogoutView
+
+
+class CustomLoginView(LoginView):
+    template_name = "relationship_app/login.html"
+
+
+class CustomLogoutView(LogoutView):
+    template_name = "relationship_app/logout.html"
+
 
 def register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()  # Saves the user to the database
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}! You can now log in.')
-            return redirect('login')
+            user = form.save()
+            login(request, user)
+            return redirect("login")
     else:
         form = UserCreationForm()
-    return render(request, 'relationship_app/register.html', {'form': form})
 
-# Add login view for user authentication
+    return render(request, "relationship_app/register.html", {"form": form})
 
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
-
-def user_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)  # Creates session
-                return redirect('/')  # Redirect to homepage or dashboard
-            else:
-                messages.error(request, 'Invalid username or password.')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'relationship_app/login.html', {'form': form})
-
-# Add logout view to end user session
-
-from django.contrib.auth.decorators import login_required
-
-@login_required
-def user_logout(request):
-    logout(request)  # Ends the user session
-    return render(request, 'relationship_app/logout.html')
