@@ -161,3 +161,62 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'", "data:")
+
+
+
+
+# ------------------------------------------------------------
+# HTTPS SECURITY CONFIGURATION
+# These settings enforce secure HTTPS connections
+# ------------------------------------------------------------
+
+# Redirect all HTTP requests to HTTPS
+# If a user visits http://example.com Django will redirect to https://example.com
+SECURE_SSL_REDIRECT = True
+
+
+# HTTP Strict Transport Security (HSTS)
+# This tells browsers to ONLY communicate with the server using HTTPS
+# The value is in seconds (31536000 seconds = 1 year)
+SECURE_HSTS_SECONDS = 31536000
+
+
+# Apply HSTS rule to all subdomains
+# Example: api.example.com, blog.example.com
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+
+# Allow your site to be included in browser HSTS preload lists
+# This ensures browsers always force HTTPS even before visiting your site
+SECURE_HSTS_PRELOAD = True
+
+
+
+# ------------------------------------------------------------
+# SECURE COOKIE SETTINGS
+# Ensures cookies are only transmitted over HTTPS
+# ------------------------------------------------------------
+
+# Session cookies will only be sent over HTTPS
+SESSION_COOKIE_SECURE = True
+
+# CSRF cookies will only be sent over HTTPS
+CSRF_COOKIE_SECURE = True
+
+
+# ------------------------------------------------------------
+# HTTP SECURITY HEADERS
+# Protects against clickjacking, MIME sniffing and XSS
+# ------------------------------------------------------------
+
+# Prevent clickjacking attacks by disallowing site framing
+X_FRAME_OPTIONS = "DENY"
+
+
+# Prevent browsers from guessing content types
+# This protects against malicious file execution
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+
+# Enable browser XSS protection
+SECURE_BROWSER_XSS_FILTER = True
