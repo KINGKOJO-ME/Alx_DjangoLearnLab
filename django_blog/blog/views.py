@@ -62,11 +62,14 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-published_date']
 
-
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -100,3 +103,60 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+    
+
+# comment handling views
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Comment, Post
+from .forms import CommentForm
+
+# Add comment view
+@login_required
+def add_comment(request, post_id):
+
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+
+    return redirect('post-detail', pk=post.id)
+
+# edit comment view
+@login_required
+def edit_comment(request, pk):
+
+    comment = get_object_or_404(Comment, id=pk)
+
+    if request.user != comment.author:
+        return redirect('post-detail', pk=comment.post.id)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+
+        if form.is_valid():
+            form.save()
+            return redirect('post-detail', pk=comment.post.id)
+
+    else:
+        form = CommentForm(instance=comment)
+
+    return render(request, 'blog/edit_comment.html', {'form': form})
+
+# delete comment view
+@login_required
+def delete_comment(request, pk):
+
+    comment = get_object_or_404(Comment, id=pk)
+
+    if request.user == comment.author:
+        comment.delete()
+
+    return redirect('post-detail', pk=comment.post.id)

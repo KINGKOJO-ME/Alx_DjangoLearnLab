@@ -1,10 +1,16 @@
-<h1>{{ object.title }}</h1>
+<h2>Comments</h2>
 
-<p>{{ object.content }}</p>
+{% for comment in object.comments.all %}
+    <div>
+        <p><strong>{{ comment.author }}</strong></p>
+        <p>{{ comment.content }}</p>
+        <small>{{ comment.created_at }}</small>
 
-<p>Author: {{ object.author }}</p>
-
-<a href="{% url 'post-update' object.pk %}">Edit</a>
-<a href="{% url 'post-delete' object.pk %}">Delete</a>
-
-<a href="{% url 'post-list' %}">Back to posts</a>
+        {% if user == comment.author %}
+            <a href="{% url 'edit-comment' comment.id %}">Edit</a>
+            <a href="{% url 'delete-comment' comment.id %}">Delete</a>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No comments yet.</p>
+{% endfor %}
