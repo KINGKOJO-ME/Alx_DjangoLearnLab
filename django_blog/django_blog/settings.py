@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'blog',
+
+     'taggit', # Add taggit for tagging functionality
 ]
 
 MIDDLEWARE = [

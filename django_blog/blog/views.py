@@ -207,3 +207,42 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.id})
+    
+
+
+# implementing search functionality for posts and tags
+
+    from django.db.models import Q
+from .models import Tag
+
+
+def search_posts(request):
+
+    query = request.GET.get('q')
+
+    results = []
+
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    return render(request, 'blog/search_results.html', {
+        'query': query,
+        'results': results
+    })
+
+# View to display posts by tag
+
+def posts_by_tag(request, tag_name):
+
+    tag = Tag.objects.get(name=tag_name)
+
+    posts = Post.objects.filter(tags=tag)
+
+    return render(request, 'blog/posts_by_tag.html', {
+        'tag': tag,
+        'posts': posts
+    })

@@ -40,7 +40,7 @@
 <h3>Tags</h3>
 
 {% for tag in object.tags.all %}
-    <a href="{% url 'posts-by-tag' tag.name %}">{{ tag.name }}</a>
-{% empty %}
-    <p>No tags</p>
+    <a href="{% url 'posts-by-tag' tag.slug %}">
+        {{ tag.name }}
+    </a>
 {% endfor %}

@@ -32,3 +32,42 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+
+
+# form for handling tags
+
+        from django import forms
+from .models import Post, Tag
+
+
+class PostForm(forms.ModelForm):
+
+    tags = forms.CharField(required=False, help_text="Comma-separated tags")
+
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        if commit:
+            instance.save()
+
+            tags = self.cleaned_data.get('tags')
+            if tags:
+                tag_list = tags.split(',')
+
+                for tag in tag_list:
+                    tag_obj, created = Tag.objects.get_or_create(name=tag.strip())
+                    instance.tags.add(tag_obj)
+
+        return instance
+    
+
+
+class PostForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']

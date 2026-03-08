@@ -41,3 +41,28 @@ Features:
 /posts/<post_id>/comments/new/ – Add comment  
 /comments/<comment_id>/edit/ – Edit comment  
 /comments/<comment_id>/delete/ – Delete comment
+
+
+
+
+## Tagging System
+
+Posts can include multiple tags.
+
+Example tags:
+django, python, backend
+
+Tags help organize posts and make them easier to discover.
+
+---
+
+## Search Feature
+
+Users can search posts using:
+
+- Title
+- Content
+- Tags
+
+Search URL:
+/search/?q=django
