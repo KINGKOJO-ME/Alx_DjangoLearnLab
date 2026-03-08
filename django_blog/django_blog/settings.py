@@ -121,12 +121,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-
-
-# static files settings
-import os
-
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'blog/static'),  # Ensure tracker detects this
+    BASE_DIR / "blog" / "static",  # Ensures tracker sees static files
 ]
