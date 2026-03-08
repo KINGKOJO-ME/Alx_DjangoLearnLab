@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'blog',
 ]
 
@@ -76,11 +76,14 @@ WSGI_APPLICATION = 'django_blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',  # Use postgresql
+        'NAME': 'django_blog_db',                   # Database name
+        'USER': 'your_db_user',                     # Required 
+        'PASSWORD': 'your_db_password',             # Replace with actual password
+        'HOST': 'localhost',                        # Or your DB host
+        'PORT': '5432',                             
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
