@@ -23,3 +23,14 @@ This project demonstrates advanced Django REST Framework API development.
 
 - Read access: Public
 - Write access: Authenticated users only
+
+
+## Filtering, Searching, and Ordering
+
+The BookListView supports advanced query capabilities.
+
+### Filtering
+
+Filter books by title, author, or publication year.
+
+Example:
