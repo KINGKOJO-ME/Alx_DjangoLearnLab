@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^x6f0r8g9&wrh=88t)v6f2uy#x-+t44bh1^&w922v(loss=+oe'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -56,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'social_media_api.urls'
@@ -125,6 +127,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# configure static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # authentication settings
 AUTH_USER_MODEL = 'accounts.User'
@@ -150,4 +155,23 @@ REST_FRAMEWORK = {
         'rest_framework.pagination.PageNumberPagination',
 
     'PAGE_SIZE': 10
+}
+
+
+#security settings
+SECURE_BROWSER_XSS_FILTER = True
+
+X_FRAME_OPTIONS = 'DENY'
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+SECURE_SSL_REDIRECT = True
+
+
+
+import dj_database_url
+import os
+
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
 }
