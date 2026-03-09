@@ -53,3 +53,56 @@ class FeedView(APIView):
         serializer = PostSerializer(posts, many=True)
 
         return Response(serializer.data)
+    
+
+#like and unlike views
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from .models import Post, Like
+from notifications.models import Notification
+
+
+# Like a post
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def like_post(request, pk):
+
+    post = Post.objects.get(pk=pk)
+
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        post=post
+    )
+
+    if created:
+
+        Notification.objects.create(
+            recipient=post.author,
+            actor=request.user,
+            verb="liked your post",
+            target=str(post.id)
+        )
+
+        return Response({"message": "Post liked"})
+
+    return Response({"message": "Already liked"})
+
+
+
+# Unlike a post
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def unlike_post(request, pk):
+
+    post = Post.objects.get(pk=pk)
+
+    Like.objects.filter(
+        user=request.user,
+        post=post
+    ).delete()
+
+    return Response({"message": "Post unliked"})
+
+
